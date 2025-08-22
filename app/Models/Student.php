@@ -1,12 +1,17 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Student extends Model
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable; // 👈 Model o‘rniga
+use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Notifications\Notifiable;
+
+class Student extends Authenticatable implements FilamentUser
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
+
+    protected $guarded = [];
 
     public function group()
     {
@@ -23,5 +28,8 @@ class Student extends Model
         return $this->hasMany(Penalty::class);
     }
 
-    protected $guarded = [];
+    public function canAccessPanel(\Filament\Panel $panel): bool
+    {
+        return $panel->getId() === 'student';
+    }
 }
