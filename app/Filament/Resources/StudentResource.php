@@ -1,0 +1,134 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use App\Filament\Resources\StudentResource\Pages;
+use App\Models\Student;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use App\Filament\Resources\StudentResource\RelationManagers\PaymentsRelationManager;
+use App\Filament\Resources\StudentResource\RelationManagers\PenaltiesRelationManager;
+class StudentResource extends Resource
+{
+    protected static ?string $model = Student::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static ?string $navigationLabel = 'Students';
+    protected static ?string $pluralLabel = 'Students';
+    protected static ?string $modelLabel = 'Student';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->label('Full Name')
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('phone')
+                    ->label('Phone Number')
+                    ->tel()
+                    ->maxLength(20),
+
+                Forms\Components\Select::make('group_id')
+                    ->label('Group')
+                    ->relationship('group', 'name')
+                    ->preload()
+                    ->searchable()
+                    ->required(),
+
+                Forms\Components\Select::make('status')
+                    ->label('Status')
+                    ->options([
+                        'active' => 'Active',
+                        'inactive' => 'Inactive',
+                    ])
+                    ->default('active')
+                    ->required(),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Name')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('phone')
+                    ->label('Phone')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('group.name')
+                    ->label('Group')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\BadgeColumn::make('status')
+                    ->label('Status')
+                    ->colors([
+                        'success' => 'active',
+                        'danger' => 'inactive',
+                    ])
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime('d-m-Y H:i')
+                    ->label('Created At')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime('d-m-Y H:i')
+                    ->label('Updated At')
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'active' => 'Active',
+                        'inactive' => 'Inactive',
+                    ]),
+
+                Tables\Filters\SelectFilter::make('group')
+                    ->label('Group')
+                    ->relationship('group', 'name')
+                    ->searchable()
+                    ->preload(),
+            ])
+
+            ->actions([
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            PaymentsRelationManager::class,
+            PenaltiesRelationManager::class,
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListStudents::route('/'),
+            'create' => Pages\CreateStudent::route('/create'),
+            'edit' => Pages\EditStudent::route('/{record}/edit'),
+        ];
+    }
+}
