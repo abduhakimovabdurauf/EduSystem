@@ -30,6 +30,8 @@ class StudentPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->sidebarCollapsibleOnDesktop(false)
+            ->navigation(false)
             ->discoverResources(in: app_path('Filament/Student/Resources'), for: 'App\\Filament\\Student\\Resources')
             ->discoverPages(in: app_path('Filament/Student/Pages'), for: 'App\\Filament\\Student\\Pages')
             ->pages([

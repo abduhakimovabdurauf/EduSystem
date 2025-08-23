@@ -29,6 +29,17 @@ class StudentResource extends Resource
                     ->required()
                     ->maxLength(255),
 
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->unique(ignoreRecord: true)
+                    ->required(),
+
+                Forms\Components\TextInput::make('password')
+                    ->password()
+                    ->dehydrateStateUsing(fn ($state) => !empty($state) ? bcrypt($state) : null)
+                    ->required(fn (string $context) => $context === 'create')
+                    ->dehydrated(fn ($state) => filled($state)),
+
                 Forms\Components\TextInput::make('phone')
                     ->label('Phone Number')
                     ->tel()
@@ -57,16 +68,24 @@ class StudentResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Name')
+                    ->label('Ismi')
                     ->sortable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('phone')
-                    ->label('Phone')
+                    ->label('Telefon raqami')
                     ->searchable(),
 
+                Tables\Columns\TextColumn::make('email')
+                    ->label('Email')
+                    ->searchable(),
+
+                // Tables\Columns\TextColumn::make('password')
+                //     ->label('Paroli')
+                //     ->searchable(),
+
                 Tables\Columns\TextColumn::make('group.name')
-                    ->label('Group')
+                    ->label('Guruhi')
                     ->sortable()
                     ->searchable(),
 
