@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable; // 👈 Model o‘rniga
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Notifications\Notifiable;
 
@@ -28,8 +28,18 @@ class Student extends Authenticatable implements FilamentUser
         return $this->hasMany(Penalty::class);
     }
 
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
     public function canAccessPanel(\Filament\Panel $panel): bool
     {
         return $panel->getId() === 'student';
+    }
+
+    public function getAuthIdentifierName(): string
+    {
+        return 'phone';
     }
 }

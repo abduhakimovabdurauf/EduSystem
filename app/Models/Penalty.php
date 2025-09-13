@@ -11,6 +11,7 @@ class Penalty extends Model
         'group_id',
         'amount',
         'reason',
+        'status',
     ];
 
     public function student()

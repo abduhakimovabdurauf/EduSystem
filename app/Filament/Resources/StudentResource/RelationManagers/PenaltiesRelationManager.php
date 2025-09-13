@@ -31,6 +31,16 @@ class PenaltiesRelationManager extends RelationManager
                         'homework' => 'Uyga vazifa bajarilmadi',
                         'cheating' => 'Ko`chirildi',
                     ]),
+
+
+                Forms\Components\Select::make('status')
+                    ->label('Status')
+                    ->options([
+                        'paid' => 'Paid',
+                        'unpaid' => 'Unpaid',
+                    ])
+                    ->default('paid')
+                    ->required(),
             ]);
     }
 
@@ -38,9 +48,15 @@ class PenaltiesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('group.name')->label('Group'),
                 Tables\Columns\TextColumn::make('amount')->label('Amount')->money('UZS'),
                 Tables\Columns\TextColumn::make('reason')->label('Reason')->limit(30),
+                Tables\Columns\BadgeColumn::make('status')
+                    ->label('Status')
+                    ->colors([
+                        'success' => 'paid',
+                        'danger' => 'unpaid',
+                    ])
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime('d.m.Y H:i'),
             ])
             ->headerActions([
@@ -49,6 +65,13 @@ class PenaltiesRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'paid' => 'Paid',
+                        'unpaid' => 'Unpaid',
+                    ]),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

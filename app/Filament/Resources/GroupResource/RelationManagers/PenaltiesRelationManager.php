@@ -35,6 +35,15 @@ class PenaltiesRelationManager extends RelationManager
                         'homework' => 'Uyga vazifa bajarilmadi',
                         'cheating' => 'Ko`chirildi',
                     ]),
+
+                Forms\Components\Select::make('status')
+                    ->label('Status')
+                    ->options([
+                        'paid' => 'Paid',
+                        'unpaid' => 'Unpaid',
+                    ])
+                    ->default('paid')
+                    ->required(),
             ]);
     }
 
@@ -54,6 +63,22 @@ class PenaltiesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Date')
                     ->date(),
+
+                
+                Tables\Columns\BadgeColumn::make('status')
+                    ->label('Status')
+                    ->colors([
+                        'success' => 'paid',
+                        'danger' => 'unpaid',
+                    ])
+                    ->sortable(),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'paid' => 'Paid',
+                        'unpaid' => 'Unpaid',
+                    ]),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),

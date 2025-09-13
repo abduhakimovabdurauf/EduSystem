@@ -55,7 +55,14 @@ class PaymentsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('amount'),
                 Tables\Columns\TextColumn::make('month'),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\BadgeColumn::make('status')
+                    ->label('Status')
+                    ->colors([
+                        'success' => 'paid',
+                        'danger' => 'unpaid',
+                        'warning' => 'partial',
+                    ])
+                    ->sortable(),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),

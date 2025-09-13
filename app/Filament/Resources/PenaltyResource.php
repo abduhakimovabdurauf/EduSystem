@@ -40,7 +40,16 @@ class PenaltyResource extends Resource
                     ->options([
                         'homework' => 'Uyga vazifa bajarilmadi',
                         'cheating' => 'Ko`chirildi',
+                    ]),
+                
+                Forms\Components\Select::make('status')
+                    ->label('Status')
+                    ->options([
+                        'paid' => 'Paid',
+                        'unpaid' => 'Unpaid',
                     ])
+                    ->default('paid')
+                    ->required(),
             ]);
     }
 
@@ -51,7 +60,26 @@ class PenaltyResource extends Resource
                 Tables\Columns\TextColumn::make('student.name')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('group.name')->sortable(),
                 Tables\Columns\TextColumn::make('amount')->money('UZS'),
+                Tables\Columns\BadgeColumn::make('status')
+                    ->label('Status')
+                    ->colors([
+                        'success' => 'paid',
+                        'danger' => 'unpaid',
+                        'warning' => 'partial',
+                    ])
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime('d.m.Y H:i'),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'paid' => 'Paid',
+                        'unpaid' => 'Unpaid',
+                    ]),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ]);
     }
 

@@ -2,7 +2,10 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\GroupResource\Pages;
+use App\Filament\Resources\GroupResource\Pages\AttendanceJournal;
+use App\Filament\Resources\GroupResource\Pages\ListGroups;
+use App\Filament\Resources\GroupResource\Pages\CreateGroup;
+use App\Filament\Resources\GroupResource\Pages\EditGroup;
 use App\Models\Group;
 use App\Models\Teacher;
 use Filament\Forms;
@@ -13,6 +16,7 @@ use Filament\Tables\Table;
 use App\Filament\Resources\GroupResource\RelationManagers\StudentsRelationManager;
 use App\Filament\Resources\GroupResource\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\GroupResource\RelationManagers\PenaltiesRelationManager;
+use App\Filament\Resources\GroupResource\RelationManagers\LessonsRelationManager;
 class GroupResource extends Resource
 {
     protected static ?string $model = Group::class;
@@ -99,6 +103,10 @@ class GroupResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('journal')
+                ->label('Jurnal')
+                ->icon('heroicon-o-document-chart-bar')
+                ->url(fn (Group $record): string => static::getUrl('journal', ['record' => $record]))
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -113,15 +121,17 @@ class GroupResource extends Resource
             StudentsRelationManager::class,
             PaymentsRelationManager::class,
             PenaltiesRelationManager::class,
+            LessonsRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGroups::route('/'),
-            'create' => Pages\CreateGroup::route('/create'),
-            'edit' => Pages\EditGroup::route('/{record}/edit'),
+            'index' => ListGroups::route('/'),
+            'create' => CreateGroup::route('/create'),
+            'edit' => EditGroup::route('/{record}/edit'),
+            'journal' => AttendanceJournal::route('/{record}/journal'),
         ];
     }
 }

@@ -17,7 +17,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-
+use App\Filament\Student\Pages\Auth\StudentLogin;
 class StudentPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -25,7 +25,7 @@ class StudentPanelProvider extends PanelProvider
         return $panel
             ->id('student')
             ->path('student')
-            ->login()
+            ->login(StudentLogin::class)
             ->authGuard('student')
             ->colors([
                 'primary' => Color::Amber,

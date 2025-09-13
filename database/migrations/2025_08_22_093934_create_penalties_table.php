@@ -12,8 +12,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
             $table->foreignId('group_id')->constrained()->cascadeOnDelete();
-            $table->integer('amount')->default(5000); // har bir uyga vazifa qilinmasa, 5000 so'm
-            $table->string('reason')->nullable(); // optional: "Homework not done"
+            $table->integer('amount')->default(5000);
+            $table->string('reason');
             $table->timestamps();
         });
     }

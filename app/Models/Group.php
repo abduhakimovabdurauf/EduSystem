@@ -27,6 +27,11 @@ class Group extends Model
     {
         return $this->hasMany(Penalty::class);
     }
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class);
+    }
+
 
     protected $guarded = [];
 

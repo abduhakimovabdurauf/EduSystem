@@ -21,9 +21,9 @@ class StudentsRelationManager extends RelationManager
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->unique(ignoreRecord: true)
+                Forms\Components\TextInput::make('phone')
+                    ->label('Phone Number')
+                    ->tel()
                     ->required(),
 
                 Forms\Components\TextInput::make('password')
@@ -31,11 +31,6 @@ class StudentsRelationManager extends RelationManager
                     ->dehydrateStateUsing(fn ($state) => !empty($state) ? bcrypt($state) : null)
                     ->required(fn (string $context) => $context === 'create')
                     ->dehydrated(fn ($state) => filled($state)),
-
-                Forms\Components\TextInput::make('phone')
-                    ->label('Phone Number')
-                    ->tel()
-                    ->required(),
 
                 Forms\Components\Select::make('status')
                     ->options([
@@ -52,7 +47,6 @@ class StudentsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('email'),
                 // Tables\Columns\TextColumn::make('password'),
                 Tables\Columns\TextColumn::make('phone'),
                 Tables\Columns\TextColumn::make('status'),
